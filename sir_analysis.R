@@ -1,34 +1,30 @@
 # Libraries --------------------------
-library(netmeta)
-library(sir)
-library(dplyr)
+library("netmeta")
+library("sir")
+library("dplyr")
 
 
 # helper functions for database analysis -----------------------------------------
-get_ranks <- function(obj, studies_ran) {
-
+get_ranks <- function(obj, sel) {
   nma <- obj$netobj
   recid <- obj$recid
-
-  ok <- netrank(nma, method = "P-score", small.values = studies_ran$small.values[studies_ran$recid == recid])
-  return(ok$Pscore.random)
+  #
+  ok <- netrank(nma, method = "P-score",
+                small.values =
+                  sel$small.values[sel$recid == recid])
+  #
+  ok$Pscore.random
 }
 
 
-sir_func <- function(pscores) {
-
-  temp <- calc_sir(sucras = pscores, trt_names = paste0(1:length(pscores)))
-  return(temp$sir)
-
-}
+sir_func <- function(x)
+  sir(x, trts = seq_len(length(x)))$sir
 
 ns_func <- function(obj) {
-
   nma <- obj$netob
-
   ns <- obj$netobj$k
-  return(ns)
-
+  #
+  ns
 }
 
 prop_func <- function(obj, alpha = 0.05) {
@@ -62,12 +58,17 @@ error_NMAs <- allNMAs[-c(which(ran))] # 28 of them had errors
 ran_NMAs_record <- unlist(lapply(ran_NMAs, function(x) x$recid))
 
 # figure out if effect is beneficial or harmful
-studies_ran <-subset(study_info, Record.ID %in% ran_NMAs_record) %>% select(Record.ID, Harmful.Beneficial.Outcome) %>% rename(recid = Record.ID) %>%
-  mutate(small.values = if_else(Harmful.Beneficial.Outcome == "Beneficial", "bad", "good"))
+studies_ran <- subset(study_info,
+                      Record.ID %in% ran_NMAs_record) %>%
+  select(Record.ID, Harmful.Beneficial.Outcome) %>%
+  rename(recid = Record.ID) %>%
+  mutate(small.values =
+           if_else(Harmful.Beneficial.Outcome == "Beneficial",
+                   "undesirable", "desirable"))
 
 # Calculate SIRs for everything
-pscores <- lapply(ran_NMAs, get_ranks, studies_ran = studies_ran)
-sirs <- sapply(pscores, sir_func)
+pscores <- lapply(ran_NMAs, get_ranks, sel = studies_ran)
+sirs <- sapply(pscores, function(x) sir(x)$sir)
 summary(sirs)
 IQR(sirs)
 
@@ -87,12 +88,11 @@ plot(ntrts, sirs, ylim = c(0,1), xlim = c(4, 46),
 alphas <- rev(c(0.1, 0.05, 0.01, 0.005))
 proportions <- matrix(nrow = length(alphas), ncol = length(sirs))
 
-for(i in 1:length(alphas)) {
+for (i in 1:length(alphas))
+  proportions[i, ] <- sapply(ran_NMAs, prop_func, alpha = alphas[i])
 
-  proportions[i,] <- sapply(ran_NMAs, prop_func, alpha = alphas[i])
-
-}
-plot(proportions[3,], sirs, xlab = "Proportion of treatment comparisons that are significant at 5% level",
+plot(proportions[3,], sirs,
+     xlab = "Proportion of treatment comparisons that are significant at 5% level",
      ylab = 'SIR', ylim = c(0,1))
 
 # Relationship with range of p-scores
