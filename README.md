@@ -1,4 +1,4 @@
-# sir-analysis
+# poth-analysis
 
 R code to perform the database analysis and examples.
 
@@ -8,15 +8,15 @@ Script to extract the data from database and run NMAs using netmeta. Produces th
 
 ## studyList.rds
 
-Dataframe with information about all studies from the database. Used in sir_analysis.R and examples.R
+Dataframe with information about all studies from the database. Used in poth_analysis.R and examples.R
 
 ## allNMAs.rds
 
-List of all NMAs peformed in the analyse.R file. Used in sir_analysis.R and examples.R
+List of all NMAs performed in the analyse.R file. Used in poth_analysis.R and examples.R
 
-## sir_analysis.R
+## poth_analysis.R
 
-Script to calculate SIR for the database of NMAs and perform exploratory analysis, make plots
+Script to calculate POTH for the database of NMAs and perform exploratory analysis, make plots
 
 ## examples.R
 

@@ -1,6 +1,6 @@
 # Libraries --------------------------
 library("netmeta")
-library("sir")
+library("poth")
 library("dplyr")
 
 
@@ -17,8 +17,8 @@ get_ranks <- function(obj, sel) {
 }
 
 
-sir_func <- function(x)
-  sir(x, trts = seq_len(length(x)))$sir
+poth_func <- function(x)
+  poth(x, trts = seq_len(length(x)))$poth
 
 ns_func <- function(obj) {
   nma <- obj$netob
@@ -27,25 +27,19 @@ ns_func <- function(obj) {
   ns
 }
 
-prop_func <- function(obj, alpha = 0.05) {
-
+prop_func <- function(obj, alpha = 0.05)
   mean(obj$netobj$pval.random < alpha, na.rm = T)
 
-}
-
-range_func <- function(pscores) {
-
+range_func <- function(pscores)
   max(pscores) - min(pscores)
 
-}
 
+# Calculate POTH from the analysed datasets -------------------------------------
 
-# Calculate SIR from the analysed datasets -------------------------------------
-
-# First, use anlayse.R to analyse all datasets yourself using nmadb
+# First, use analyse.R to analyse all datasets yourself using nmadb
 # Or, use download the .rds object provided
 
-# Read in all nmas analysis object and study information
+# Read in all NMAs analysis object and study information
 allNMAs <- readRDS("allNMAs.rds") # first, set working directory to location where you saved the object
 study_info <- readRDS("studyList.rds") %>% select(-contains("..choice"))
 
@@ -66,36 +60,36 @@ studies_ran <- subset(study_info,
            if_else(Harmful.Beneficial.Outcome == "Beneficial",
                    "undesirable", "desirable"))
 
-# Calculate SIRs for everything
+# Calculate POTHs for everything
 pscores <- lapply(ran_NMAs, get_ranks, sel = studies_ran)
-sirs <- sapply(pscores, function(x) sir(x)$sir)
-summary(sirs)
-IQR(sirs)
+poths <- sapply(pscores, function(x) poth(x)$poth)
+summary(poths)
+IQR(poths)
 
-hist(sirs, main = "",
-     xlab= "SIR", col = "grey95", breaks = 20, xlim = c(0,1))
-abline(v = quantile(sirs, c(0.5)), col = "navy", lwd = 2)
+hist(poths, main = "",
+     xlab= "POTH", col = "grey95", breaks = 20, xlim = c(0,1))
+abline(v = quantile(poths, c(0.5)), col = "navy", lwd = 2)
 legend("topleft", text.col = c("navy", "black", "black"),
        legend = c("Median = 0.67706", "Min = 0.096408", "Max = 0.999762"), bty = "n")
 
 # look at relationship with number of treatments
 ntrts <- sapply(pscores, length)
-cor(sirs, ntrts)
-plot(ntrts, sirs, ylim = c(0,1), xlim = c(4, 46),
-     xlab = "Number of Treatments", ylab = "SIR")
+cor(poths, ntrts)
+plot(ntrts, poths, ylim = c(0,1), xlim = c(4, 46),
+     xlab = "Number of Treatments", ylab = "POTH")
 
 # Relationship with proportion of significantly different treatment comparisons
 alphas <- rev(c(0.1, 0.05, 0.01, 0.005))
-proportions <- matrix(nrow = length(alphas), ncol = length(sirs))
+proportions <- matrix(nrow = length(alphas), ncol = length(poths))
 
 for (i in 1:length(alphas))
   proportions[i, ] <- sapply(ran_NMAs, prop_func, alpha = alphas[i])
 
-plot(proportions[3,], sirs,
+plot(proportions[3,], poths,
      xlab = "Proportion of treatment comparisons that are significant at 5% level",
-     ylab = 'SIR', ylim = c(0,1))
+     ylab = 'POTH', ylim = c(0,1))
 
 # Relationship with range of p-scores
 prange <- sapply(pscores, range_func)
-plot(prange, sirs, xlim = c(0,1), ylim = c(0,1),
-     xlab = "max(P-scores) - min(p-scores)", ylab = "SIR")
+plot(prange, poths, xlim = c(0,1), ylim = c(0,1),
+     xlab = "max(P-scores) - min(p-scores)", ylab = "POTH")
