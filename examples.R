@@ -69,7 +69,7 @@ ranNMAs <- allNMAs[which(ran)]
 
 # Depression example - many treatments ---------------------------------------
 id_depression <- 49
-recid_depression <- ranNMAs
+recid_depression <- ranNMAs[[id_depression]]$recid
 ex_depression <- ranNMAs[[id_depression]]$netobj
 
 # Find out info about study, like the study name - this is how treatment names are identified
@@ -112,17 +112,17 @@ forest(net.depr, small.values = "undesirable", reference.group = "placebo",
 # Local POTH - Look at top 5 treatments
 top5.depr <- subset(poth.depr, top = 5)
 loo.top5.depr <- loo(top5.depr)
-
-top5
+#
+loo.top5.depr
 plot(loo.top5.depr)
 
-# Local Sir - look at top and bottom 5
+# Local POTH - look at top and bottom 5
 
 top5.bottom5.depr <- subset(poth.depr, top = 5, bottom = 5)
 loo.top5.bottom5.depr <- loo(top5.bottom5.depr)
-
-top5.bottom5.
-plot(loo.top5.bottom5.)
+#
+loo.top5.bottom5.depr
+plot(loo.top5.bottom5.depr)
 
 
 # Transplants - low POTH ---------------------------------------------------
