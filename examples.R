@@ -53,7 +53,6 @@ forest(netw, small.values = "desirable", reference.group = "conventional therapy
        smlab= "Comparison: other vs conventional therapy\nPOTH = 0.838")
 # dev.off()
 
-
 # Depression example - many treatments ---------------------------------------
 # Load the object of all NMA analyses
 allNMAs <- readRDS("allNMAs.rds")
@@ -65,7 +64,6 @@ ranNMAs <- allNMAs[which(ran)]
 
 # Depression example
 id_depression <- 48
-
 recid_depression <- ranNMAs[[id_depression]]$recid
 ex_depression <- ranNMAs[[id_depression]]$netobj
 

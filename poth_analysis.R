@@ -63,7 +63,6 @@ tau_func <- function(obj) {
 
 }
 
-
 # Calculate POTH from the analysed datasets -------------------------------------
 
 # First, use analyse.R to analyse all datasets yourself using nmadb
@@ -71,7 +70,6 @@ tau_func <- function(obj) {
 
 # Read in all NMAs analysis object and study information
 allNMAs <- readRDS("allNMAs.rds") # first, set working directory to location where you saved the object
-
 study_info <- readRDS("studyList.rds") %>% select(-contains("..choice"))
 
 # find only the ones without errors
@@ -108,6 +106,7 @@ legend("topleft", text.col = c("black", "black", "black"), lty = c(2, NA, NA), l
 
 # number of studoes
 nstudies <- sapply(ran_NMAs,ns_func)
+
 
 # look at relationship with number of treatments
 ntrts <- sapply(pscores, length)
