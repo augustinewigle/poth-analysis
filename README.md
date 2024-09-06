@@ -1,23 +1,15 @@
 # poth-analysis
 
-R code to perform the database analysis and examples.
+R code to conduct network meta-analysis (NMA) for all data sets in nmadb database
 
-## analyse.R
+## create_nmadb_NMAs.R
 
-Script to extract the data from database and run NMAs using netmeta. Produces the files studyList.rds and allNMAs.rds.
+R script to extract the data from the nmadb database and run NMAs using netmeta(). This script creates a file nmadb_NMAs.rda with the following R objects:
 
-## studyList.rds
+- allNMAs - list of all NMAs
 
-Dataframe with information about all studies from the database. Used in poth_analysis.R and examples.R
-
-## allNMAs.rds
-
-List of all NMAs performed in the analyse.R file. Used in poth_analysis.R and examples.R
-
-## poth_analysis.R
-
-Script to calculate POTH for the database of NMAs and perform exploratory analysis, make plots
+- studyList - data frame with information on studies for each NMA
 
 ## examples.R
 
-Script to run three examples from the paper.
+R script to run three examples from the paper.
