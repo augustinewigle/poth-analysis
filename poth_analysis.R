@@ -69,8 +69,8 @@ tau_func <- function(obj) {
 # Or, use download the .rds object provided
 
 # Read in all NMAs analysis object and study information
-allNMAs <- readRDS("allNMAs.rds") # first, set working directory to location where you saved the object
-study_info <- readRDS("studyList.rds") %>% select(-contains("..choice"))
+load("nmadb_NMAs.rda") # first, set working directory to location where you saved the object
+study_info <- studyList %>% select(-contains("..choice"))
 
 # find only the ones without errors
 ran <- unlist(lapply(allNMAs, function(x) length(x) > 1))
@@ -101,7 +101,7 @@ hist(poths, main = "",
      xlab= "POTH", col = "grey95", breaks = 32, xlim = c(0,1))
 abline(v = quantile(poths, c(0.5)), col = "black", lwd = 2, lty = 2)
 legend("topleft", text.col = c("black", "black", "black"), lty = c(2, NA, NA), lwd =c(2, NA, NA),
-       legend = c("Median = 0.672", "Min = 0.096", "Max > 0.999"), bty = "n")
+       legend = c("Median = 0.671", "Min = 0.096", "Max > 0.999"), bty = "n")
 # dev.off()
 
 # number of studoes
@@ -110,7 +110,7 @@ nstudies <- sapply(ran_NMAs,ns_func)
 
 # look at relationship with number of treatments
 ntrts <- sapply(pscores, length)
-cor(poths, ntrts)
+cor(poths, ntrts, method = "spearman")
 plot(ntrts, poths, ylim = c(0,1), xlim = c(4, 46),
      xlab = "Number of Treatments", ylab = "POTH")
 
@@ -122,6 +122,7 @@ for (i in 1:length(alphas))
   proportions[i, ] <- sapply(ran_NMAs, prop_func, alpha = alphas[i])
 
 range(poths[which(proportions[3,] == 0)])
+max(proportions[3,which(poths<0.5)])
 
 plot(proportions[3,], poths,
      xlab = "Proportion of treatment comparisons that are stat. signif. at 5% level",
@@ -190,10 +191,10 @@ par(mfrow = c(1,3))
 plot(taus[ors], poths[ors], main = "Effect Measure: Log Odds Ratio\n119 NMAs",
      xlab = expression(tau), ylab = "POTH",
      ylim = c(0,1))
-plot(taus[rrs], poths[rrs], main = "Effect Measure: Log Relative Risk\n69 NMAs",
+plot(taus[rrs], poths[rrs], main = "Effect Measure: Log Relative Risk\n68 NMAs",
      xlab = expression(tau), ylab = "POTH",
      ylim = c(0,1))
-plot(taus[mdsno], poths[mdsno], main = "Effect Measure: Mean Difference\n44 NMAs",
+plot(taus[mdsno], poths[mdsno], main = "Effect Measure: Mean Difference\n45 NMAs",
      xlab = expression(tau), ylab = "POTH",
      ylim = c(0,1))
 
