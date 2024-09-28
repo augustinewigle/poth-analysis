@@ -22,7 +22,7 @@ study_info <- studyList %>%
          type = Type.of.Outcome., sm = Effect.Measure,
          verified = Verified, error = Error) %>%
   mutate(small.values =
-           recode(small.values, 
+           recode(small.values,
                   "Beneficial" = "undesirable",
                   "Harmful" = "desirable",
                   "Unclear" = "unclear"),
@@ -85,7 +85,7 @@ cum1 <- cumul(poth1)
 add1 <- as.data.frame(loo1) %>% arrange(trt)
 all(net1$trts == add1$trt)
 #
-# png("forest-transp.png", width = 8, height =2.5, res = 320, units = "in")
+png("forest-transp.png", width = 8, height =2.5, res = 320, units = "in")
 forest(net1, reference.group = "Control",
        sortvar = "-Pscore",
        add.data = add1,
@@ -96,11 +96,11 @@ forest(net1, reference.group = "Control",
        digits = 2, digits.prop = 3, digits.addcols = 3,
        just.addcols = "right",
        addrows = 1,
-       text.addline1 = paste("Global POTH =", round(poth1$poth, 3)),
+       text.addline1 = paste("POTH =", round(poth1$poth, 3)),
        ff.addline = "bold")
 #       smlab = paste("Comparison: other vs control\nPOTH =",
 #                     round(poth1$poth, 3)))
-# dev.off()
+dev.off()
 
 # Bar plots
 #
@@ -164,7 +164,7 @@ cum2 <- cumul(poth2)
 add2 <- as.data.frame(loo2) %>% arrange(trt)
 all(net2$trts == add2$trt)
 #
-# png("forest-depr.png", width = 8, height =7, res = 320, units = "in")
+png("forest-depr.png", width = 8, height =7, res = 320, units = "in")
 forest(net2, reference.group = "placebo",
        sortvar = "-Pscore",
        add.data = add2,
@@ -175,18 +175,18 @@ forest(net2, reference.group = "placebo",
        digits = 2, digits.prop = 3, digits.addcols = 3,
        just.addcols = "right",
        addrows = 1,
-       text.addline1 = paste("Global POTH =", round(poth2$poth, 3)),
+       text.addline1 = paste("POTH =", round(poth2$poth, 3)),
        ff.addline = "bold")
 #       smlab = paste("Comparison: other vs placebo\nPOTH =",
 #                    round(poth2$poth, 3)))
-# dev.off()
+dev.off()
 
 # Bar plots
 #
 plt2.1 <- plot(loo2)
 plt2.2 <- plot(cum2)
 ggarrange(plt2.1, plt2.2, heights = c(2, 1.1), nrow = 2)
-# ggsave("diag-depr.png", width = 9, height = 5, units = "in")
+ggsave("diag-depr.png", width = 9, height = 5, units = "in")
 
 
 #
@@ -214,7 +214,7 @@ add3 <- as.data.frame(loo3) %>% arrange(trt)
 all(sort(net3$trts) == sort(add3$trt))
 add3 <- add3[net3$trts, ]
 #
-# png("forest-ici.png",width = 8, height = 2.8, units = "in", res = 320)
+png("forest-ici.png",width = 8, height = 2.8, units = "in", res = 320)
 forest(net3,
        reference.group = "Conventional therapy",
        sortvar = "-Pscore",
@@ -226,12 +226,12 @@ forest(net3,
        digits = 2, digits.prop = 3, digits.addcols = 3,
        just.addcols = "right",
        addrows = 1,
-       text.addline1 = paste("Global POTH =", round(poth3$poth, 3)),
+       text.addline1 = paste("POTH =", round(poth3$poth, 3)),
        ff.addline = "bold")
 #       smlab =
 #        paste("Comparison: other vs Conventional therapy\nPOTH = ",
 #             round(poth3$poth, 3)))
-# dev.off()
+dev.off()
 
 # Bar plots
 #
@@ -243,6 +243,6 @@ ggarrange(plt3.2, plt3.1, nrow = 1, widths = c(1.2, 2))
 # Subset POTH
 #
 sub3 <- subset(poth3,
-  subset = c("nivolumab", "pembrolizumab", "atezolizumab", "ipilimumab"))
+  subset = c("Nivolumab", "Pembrolizumab", "Atezolizumab", "Ipilimumab"))
 #
 sub3
