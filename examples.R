@@ -78,7 +78,7 @@ net1 <- netmeta(TE, seTE, trt1, trt2, studlab, data = dat1,
 #
 poth1 <- poth(net1)
 loo1 <- loo(poth1)
-cum1 <- cumul(poth1)
+bestk1 <- bestk(poth1)
 
 # Forest plot
 #
@@ -105,8 +105,8 @@ dev.off()
 # Bar plots
 #
 plt1.1 <- plot(loo1)
-plt1.2 <- plot(cum1)
-#plt1.2 <- plot(cum1, labels = TRUE)
+plt1.2 <- plot(bestk1)
+#plt1.2 <- plot(bestk1, labels = TRUE)
 #
 ggarrange(plt1.2, plt1.1, widths = c(1.2, 2), nrow = 1)
 # ggsave("diag_transp.png", width = 9, height = 3, units = "in")
@@ -157,7 +157,7 @@ net2 <- netmeta(TE, seTE, trt1, trt2, studlab, data = dat2,
 #
 poth2 <- poth(net2)
 loo2 <- loo(poth2)
-cum2 <- cumul(poth2)
+bestk2 <- bestk(poth2)
 
 # Forest plot
 #
@@ -184,7 +184,7 @@ dev.off()
 # Bar plots
 #
 plt2.1 <- plot(loo2)
-plt2.2 <- plot(cum2)
+plt2.2 <- plot(bestk2)
 ggarrange(plt2.1, plt2.2, heights = c(2, 1.1), nrow = 2)
 ggsave("diag-depr.png", width = 9, height = 5, units = "in")
 
@@ -206,7 +206,7 @@ net3 <- netmeta(pw, small.values = "desirable", method.tau = "REML",
 #
 poth3 <- poth(net3)
 loo3 <- loo(poth3)
-cum3 <- cumul(poth3)
+bestk3 <- bestk(poth3)
 
 # Forest plot
 #
@@ -228,7 +228,21 @@ forest(net3,
        addrows = 1,
        text.addline1 = paste("POTH =", round(poth3$poth, 3)),
        ff.addline = "bold")
-#       smlab =
+# png("ici_example.png", width = 8, height = 2.8, units = "in", res = 320)
+# forest(net3,
+#        reference.group = "Conventional therapy",
+#        sortvar = "-Pscore",
+#        # add.data = add3,
+#        leftcols = c("studlab", "Pscore"),
+#        # leftlabs = c(NA, NA, "rPOTH"),
+#        #rightcols = c("Pscore", "resid", "effect", "ci"),
+#        #rightlabs = c(NA, "rPOTH", NA, NA),
+#        digits = 2, digits.prop = 3, digits.addcols = 3,
+#        # just.addcols = "right",
+#        # addrows = 1,
+#        # text.addline1 = paste("POTH =", round(poth3$poth, 3)),
+#        ff.addline = "bold")
+# #       smlab =
 #        paste("Comparison: other vs Conventional therapy\nPOTH = ",
 #             round(poth3$poth, 3)))
 dev.off()
@@ -236,7 +250,7 @@ dev.off()
 # Bar plots
 #
 plt3.1 <- plot(loo3)
-plt3.2 <- plot(cum3)
+plt3.2 <- plot(bestk3)
 ggarrange(plt3.2, plt3.1, nrow = 1, widths = c(1.2, 2))
 # ggsave("diag-ici.png", width = 9, height = 3, units = "in")
 
