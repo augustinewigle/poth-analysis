@@ -21,7 +21,6 @@ poth_func <- function(x)
   poth(x, trts = seq_len(length(x)))$poth
 
 ns_func <- function(obj) {
-  nma <- obj$netob
   ns <- obj$netobj$k
   #
   ns
@@ -62,6 +61,19 @@ tau_func <- function(obj) {
   obj$netobj$tau
 
 }
+
+get_avg_spt <- function(obj) {
+
+  mean(obj$netobj$k.trts/obj$netobj$n)
+
+}
+
+maxnarms <- function(obj) {
+
+  max(obj$netobj$n.arms)
+
+}
+
 
 # Calculate POTH from the analysed datasets -------------------------------------
 
@@ -104,9 +116,15 @@ legend("topleft", text.col = c("black", "black", "black"), lty = c(2, NA, NA), l
        legend = c("Median = 0.671", "Min = 0.096", "Max > 0.999"), bty = "n")
 # dev.off()
 
-# number of studoes
+# number of studies
 nstudies <- sapply(ran_NMAs,ns_func)
 
+max_arms <- sapply(ran_NMAs, maxnarms)
+max_arms # sixth of ran_NMAs
+
+# Avg number of study per comparison
+study_per_trt <- sapply(ran_NMAs, get_avg_spt)
+plot(study_per_trt, poths, xlab = "Average number of studies per treatment in the network", ylab = "POTH")
 
 # look at relationship with number of treatments
 ntrts <- sapply(pscores, length)
@@ -122,7 +140,13 @@ for (i in 1:length(alphas))
   proportions[i, ] <- sapply(ran_NMAs, prop_func, alpha = alphas[i])
 
 range(poths[which(proportions[3,] == 0)])
-max(proportions[3,which(poths<0.5)])
+
+range(proportions[3,which(poths<0.5)])
+
+range(proportions[3,which(poths > 0.8)])
+
+range(proportions[3,which(poths >0.5 & poths < 0.8)])
+
 
 plot(proportions[3,], poths,
      xlab = "Proportion of treatment comparisons that are stat. signif. at 5% level",
@@ -186,19 +210,19 @@ cor(taus[rrs], poths[rrs])
 cor(taus[mds], poths[mds])
 
 
-# pdf("~/PhD/Freiburg/Project/SIR/results/tau_sir.pdf", width = 8*1.2, height = 2.5*1.2)
+pdf("~/PhD/Freiburg/Project/SIR/results/tau_sir.pdf", width = 8*1.2, height = 2.5*1.2)
 par(mfrow = c(1,3))
 plot(taus[ors], poths[ors], main = "Effect Measure: Log Odds Ratio\n119 NMAs",
-     xlab = expression(tau), ylab = "POTH",
+     xlab = expression(sigma), ylab = "POTH",
      ylim = c(0,1))
 plot(taus[rrs], poths[rrs], main = "Effect Measure: Log Relative Risk\n68 NMAs",
-     xlab = expression(tau), ylab = "POTH",
+     xlab = expression(sigma), ylab = "POTH",
      ylim = c(0,1))
 plot(taus[mdsno], poths[mdsno], main = "Effect Measure: Mean Difference\n45 NMAs",
-     xlab = expression(tau), ylab = "POTH",
+     xlab = expression(sigma), ylab = "POTH",
      ylim = c(0,1))
 
-# dev.off()
+dev.off()
 
 # Comparisons to examples --------------------------------------------
 mean(poths>0.326) # antifungals for transplants example
@@ -220,6 +244,11 @@ forest(max_nma)
 # png("smallest_poth.png", width = 6, height = 2.5, units = "in", res = 320)
 forest(min_nma)
 # dev.off()
+
+pmin <-plot(min_dist, include.probability = TRUE)
+pmax <-plot(max_dist, include.probability = TRUE)
+
+ggarrange(pmin,pmax)
 
 minid2 <- ran_NMAs[[minid]]$recid
 subset(study_info, Record.ID == minid2)

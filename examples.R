@@ -80,6 +80,11 @@ poth1 <- poth(net1)
 loo1 <- loo(poth1)
 bestk1 <- bestk(poth1)
 
+# Draw from a reference distribution
+system.time(dist1 <- refdist(x = net1, pooled = "random", nsim = 1000)) # may take 1-1.5 hours
+p1 <- plot(dist1, include.probability = TRUE) # Include Pr(observe larger POTH than we have | no treatment differences, same network characteristics/geometry)
+ggsave("ref-transp.png", width = 6, height = 3.25, units = "in")
+
 # Forest plot
 #
 add1 <- as.data.frame(loo1) %>% arrange(trt)
@@ -109,7 +114,7 @@ plt1.2 <- plot(bestk1)
 #plt1.2 <- plot(bestk1, labels = TRUE)
 #
 ggarrange(plt1.2, plt1.1, widths = c(1.2, 2), nrow = 1)
-# ggsave("diag_transp.png", width = 9, height = 3, units = "in")
+ggsave("diag_transp.png", width = 9, height = 3, units = "in")
 
 # Subset POTH
 #
@@ -158,6 +163,10 @@ net2 <- netmeta(TE, seTE, trt1, trt2, studlab, data = dat2,
 poth2 <- poth(net2)
 loo2 <- loo(poth2)
 bestk2 <- bestk(poth2)
+
+system.time(dist2 <- refdist(x = net2, pooled = "random", nsim = 1000)) # may take 1-1.5 hours
+p2 <- plot(dist2, include.probability = TRUE)
+
 
 # Forest plot
 #
@@ -208,6 +217,11 @@ poth3 <- poth(net3)
 loo3 <- loo(poth3)
 bestk3 <- bestk(poth3)
 
+system.time(dist3 <- refdist(net3, pooled = "random", nsim = 1000)) # may take 1-1.5 hours
+p3 <-plot(dist3, include.probability = T)
+ggsave("ref-ici.png", width = 6, height = 3.25, units = "in")
+
+
 # Forest plot
 #
 add3 <- as.data.frame(loo3) %>% arrange(trt)
@@ -252,7 +266,7 @@ dev.off()
 plt3.1 <- plot(loo3)
 plt3.2 <- plot(bestk3)
 ggarrange(plt3.2, plt3.1, nrow = 1, widths = c(1.2, 2))
-# ggsave("diag-ici.png", width = 9, height = 3, units = "in")
+ggsave("diag-ici.png", width = 9, height = 3, units = "in")
 
 # Subset POTH
 #
